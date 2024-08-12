@@ -21,10 +21,10 @@ from recipe.serializers import (
 RECIPES_URL = reverse('recipe:recipe-list')
 
 
-
 def detail_url(recipe_id):
     """create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
+
 
 def create_recipe(user, **params):
     """create and return a sami;e recipe."""
@@ -64,7 +64,9 @@ class PrivateRecipeApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = create_user(email='user@example.com', password='testpass123')
+        self.user = create_user(
+            email='user@example.com',
+            password='testpass123')
         self.client.force_authenticate(self.user)
 
     def test_retrive_recipes(self):
@@ -129,7 +131,7 @@ class PrivateRecipeApiTests(TestCase):
             link=original_link,
         )
         payload = {
-            'title':'new recipi title',
+            'title': 'new recipi title',
         }
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload)
@@ -150,11 +152,11 @@ class PrivateRecipeApiTests(TestCase):
         )
 
         payload = {
-            'title':'new recipe title',
-            'link':'https//example.com/new-recipe.pdf',
-            'description':'sample new recipe description',
-            'time_minutes':10,
-            'price':Decimal('2.50'),
+            'title': 'new recipe title',
+            'link': 'https//example.com/new-recipe.pdf',
+            'description': 'sample new recipe description',
+            'time_minutes': 10,
+            'price': Decimal('2.50'),
         }
         url = detail_url(recipe.id)
         res = self.client.put(url, payload)
@@ -167,7 +169,10 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_update_user_error(self):
         """test changing the recipe user results in an error."""
-        new_user = create_user(email='user2@example.com',password="user2pass123")
+        new_user = create_user(
+            email='user2@example.com',
+            password="user2pass123"
+        )
         recipe = create_recipe(user=self.user)
 
         payload = {'user': new_user.id}
@@ -188,7 +193,10 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_delete_other_user_recipe_error(self):
         """test trying to delete another users recipe gives error."""
-        new_user = create_user(email='user2@example.com', password='user2pass123')
+        new_user = create_user(
+            email='user2@example.com',
+            password='user2pass123'
+        )
         recipe = create_recipe(user=new_user)
         url = detail_url(recipe.id)
         res = self.client.delete(url)
